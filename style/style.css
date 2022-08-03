@@ -1,4 +1,22 @@
 /* #fc5295 #8100e4 */
+@media only screen and (max-width: 800px) {
+	.game-wrapper-all{
+		transform: scale(0.6);
+	}
+}
+
+@media only screen and (max-width: 500px) {
+	.game-wrapper-all{
+		transform: scale(0.4);
+	}
+}
+
+@media only screen and (max-width: 350px) {
+	.game-wrapper-all{
+		transform: scale(0.3);
+	}
+}
+
 body{
 	background-color: #2F2D2E;
 }
@@ -80,23 +98,7 @@ body{
 	z-index: 5;
 }
 
-@media (max-width: 800px) {
-	.game-wrapper-all{
-		transform: scale(0.6);
-	}
-}
 
-@media (max-width: 500px) {
-	.game-wrapper-all{
-		transform: scale(0.4);
-	}
-}
-
-@media (max-width: 350px) {
-	.game-wrapper-all{
-		transform: scale(0.3);
-	}
-}
 
 
 
