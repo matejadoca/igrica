@@ -1,6 +1,6 @@
 /// -------------------------------------------------------PAWNS
-let blackPawns = document.querySelectorAll('[src = "../images/bp.png"]');
-let whitePawns = document.querySelectorAll('[src = "../images/wp.png"]');
+let blackPawns = document.querySelectorAll('[src = "images/bp.png"]');
+let whitePawns = document.querySelectorAll('[src = "images/wp.png"]');
 let blackSquares = document.querySelectorAll('.squareBlack');
 let whiteSquares = document.querySelectorAll('.squareWhite');
 
@@ -15,7 +15,7 @@ const movePawn = (square, pawn) => {
 
 
 const pawnMove = (side, piece) =>{
-	let moves = document.querySelector('[src = "../images/circle.png"]');
+	let moves = document.querySelector('[src = "images/circle.png"]');
 	let id = parseInt(piece.target.previousElementSibling.innerText);
 	let frontPawnMoveSquare = squares[id-8];
 	let oppositePawnMoveSquare = squares[id+8];
@@ -24,7 +24,7 @@ const pawnMove = (side, piece) =>{
 			case "front":
 				switch(piece.target.className){
 					case "nc":
-						frontPawnMoveSquare.innerHTML += "<img class='circle' src='../images/circle.png'>";
+						frontPawnMoveSquare.innerHTML += "<img class='circle' src='images/circle.png'>";
 						piece.target.className = "c";
 						let circle = document.querySelector('.circle');
 						circle.addEventListener('click',()=>{movePawn(frontPawnMoveSquare, piece.target);})
@@ -38,7 +38,7 @@ const pawnMove = (side, piece) =>{
 			case "opposite":
 				switch(piece.target.className){
 					case "nc":
-						oppositePawnMoveSquare.innerHTML += "<img class='circle' src='../images/circle.png'>";
+						oppositePawnMoveSquare.innerHTML += "<img class='circle' src='images/circle.png'>";
 						piece.target.className = "c";
 						let circle = document.querySelector('.circle');
 						circle.addEventListener('click',()=>{movePawn(oppositePawnMoveSquare, piece.target);})
