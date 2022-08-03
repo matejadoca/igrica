@@ -1,5 +1,9 @@
 let flip = document.querySelector("#flip");
 let game = document.querySelector(".game");
+let gameWrapper = document.querySelector(".game-wrapper");
+
+/// responsive
+
 
 
 /// --------------------------------------------------FLIP
