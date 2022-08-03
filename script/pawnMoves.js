@@ -6,6 +6,7 @@ let whiteSquares = document.querySelectorAll('.squareWhite');
 
 const movePawn = (square, pawn) => {
 	pawn.className = "nc";
+	pawn.id = "pawnMoved";
 	let circle = document.querySelectorAll('.circle');
 	circle.forEach((circle)=>{circle.remove();});
 	square.appendChild(pawn);
@@ -57,14 +58,12 @@ const checkLegalMovesPawn = (side, piece, pawnMoveSqr, pawnMoveSqr2) =>{
 				case 1:
 					pawnMoveSqr.innerHTML += "<img class='circle' src='images/circle.png'>";
 					piece.className = "c";
-					piece.id = "pawnMoved";
 					document.querySelector('.circle').addEventListener('click',()=>{movePawn(pawnMoveSqr, piece);});
 					break;
 				case 2:
 					pawnMoveSqr.innerHTML += "<img class='circle' src='images/circle.png'>";
 					pawnMoveSqr2.innerHTML += "<img class='circle' src='images/circle.png'>";
 					piece.className = "c";
-					piece.id = "pawnMoved";
 					document.querySelectorAll('.circle')[x].addEventListener('click',()=>{movePawn(pawnMoveSqr, piece);});
 					document.querySelectorAll('.circle')[y].addEventListener('click',()=>{movePawn(pawnMoveSqr2, piece);});
 					break;
@@ -110,6 +109,7 @@ const pawnMove = (side, piece) =>{
 					case "nc":
 					
 						checkLegalMovesPawn("opposite", piece.target, oppositePawnMoveSquare, oppositePawnMoveSquare2 );
+						break;
 					case "c":
 						piece.target.className = "nc";
 						break;
@@ -119,7 +119,7 @@ const pawnMove = (side, piece) =>{
 
 	}else{
 		moves.remove();
-		pawnMove(side,piece);
+		pawnMove(side, piece);
 	}
 }
 
