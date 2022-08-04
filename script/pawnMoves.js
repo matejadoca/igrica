@@ -4,12 +4,23 @@ let whitePawns = document.querySelectorAll('[src = "images/wp.png"]');
 let blackSquares = document.querySelectorAll('.squareBlack');
 let whiteSquares = document.querySelectorAll('.squareWhite');
 
-const movePawn = (square, pawn) => {
-	pawn.className = "nc";
-	pawn.id = "pawnMoved";
-	let circle = document.querySelectorAll('.circle');
-	circle.forEach((circle)=>{circle.remove();});
-	square.appendChild(pawn);
+
+
+const movePawn = (side, square, pawn) => {
+	if(canPlay()==side){
+		
+		pawn.className = "nc";
+		pawn.setAttribute("name", "Moved");
+
+		countMoves = parseInt(pawn.getAttribute("alt"))+1;
+		pawn.setAttribute("alt", countMoves);
+
+		let circle = document.querySelectorAll('.circle');
+		circle.forEach((circle)=>{circle.remove();});
+		square.appendChild(pawn);
+		flipFunction();
+	}
+	
 }
 
 
@@ -49,7 +60,7 @@ const checkLegalMovesPawn = (side, piece, pawnMoveSqr, pawnMoveSqr2) =>{
 			
 	}
 
-	if ((piece.parentElement.parentElement.getAttribute("name") == "2" | piece.parentElement.parentElement.getAttribute("name") == "7") & piece.id!="pawnMoved") {
+	if ((piece.parentElement.parentElement.getAttribute("name") == "2" | piece.parentElement.parentElement.getAttribute("name") == "7") & piece.getAttribute("name")!="Moved") {
 	
 				switch(checkForPiecesBlockingPawn("1stmove", piece, pawnMoveSqr, pawnMoveSqr2)){
 
@@ -58,14 +69,14 @@ const checkLegalMovesPawn = (side, piece, pawnMoveSqr, pawnMoveSqr2) =>{
 				case 1:
 					pawnMoveSqr.innerHTML += "<img class='circle' src='images/circle.png'>";
 					piece.className = "c";
-					document.querySelector('.circle').addEventListener('click',()=>{movePawn(pawnMoveSqr, piece);});
+					document.querySelector('.circle').addEventListener('click',()=>{movePawn(side, pawnMoveSqr, piece);});
 					break;
 				case 2:
 					pawnMoveSqr.innerHTML += "<img class='circle' src='images/circle.png'>";
 					pawnMoveSqr2.innerHTML += "<img class='circle' src='images/circle.png'>";
 					piece.className = "c";
-					document.querySelectorAll('.circle')[x].addEventListener('click',()=>{movePawn(pawnMoveSqr, piece);});
-					document.querySelectorAll('.circle')[y].addEventListener('click',()=>{movePawn(pawnMoveSqr2, piece);});
+					document.querySelectorAll('.circle')[x].addEventListener('click',()=>{movePawn(side, pawnMoveSqr, piece);});
+					document.querySelectorAll('.circle')[y].addEventListener('click',()=>{movePawn(side, pawnMoveSqr2, piece);});
 					break;
 				}
 
@@ -78,7 +89,7 @@ const checkLegalMovesPawn = (side, piece, pawnMoveSqr, pawnMoveSqr2) =>{
 				case 1:
 					pawnMoveSqr.innerHTML += "<img class='circle' src='images/circle.png'>";
 					piece.className = "c";
-					document.querySelector('.circle').addEventListener('click',()=>{movePawn(pawnMoveSqr, piece);});
+					document.querySelector('.circle').addEventListener('click',()=>{movePawn(side, pawnMoveSqr, piece);});
 					break;
 		}
 	}
@@ -137,8 +148,6 @@ const showLegalMoves = (pieceName, color, p) =>{
 }
 
 
-
 whitePawns.forEach( p => p.addEventListener('click',(p) => {showLegalMoves("pawn","w", p);}));
 blackPawns.forEach( p => p.addEventListener('click',(p) => {showLegalMoves("pawn","b", p);}));
-
 

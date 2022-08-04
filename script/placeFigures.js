@@ -8,13 +8,13 @@ const placeSquare = (s, square, color) => {square[s].className = `square square$
 const placeFirstRow = (s, square, color) => {
 	let position = [`${color}r.png`, `${color}n.png`, `${color}b.png` , `${color}q.png`, `${color}k.png`, `${color}b.png`, `${color}n.png`, `${color}r.png`];
 	for(let i = 0;i < 8;i++){
-		square[i].innerHTML = `<img class="nc" src="images/${position[i]}">`;
+		square[i].innerHTML = `<img class="nc" alt= "0" src="images/${position[i]}">`;
 	}
 }
 
 const placePawns = (s, square, color) =>{
 	for(let i = 0;i < 8;i++){
-		square[i].innerHTML = `<img class="nc" src="images/${color}p.png">`;
+		square[i].innerHTML = `<img class="nc" alt= "0" src="images/${color}p.png">`;
 		
 	}
 }
