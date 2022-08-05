@@ -7,7 +7,66 @@ let totalPieces = document.querySelectorAll('[data-moveCount]');
 let totalMoves = document.querySelector('.totalMoves');
 let totalMovesCount = 0;
 
+let rightSide = [63, 55, 47, 39, 31, 23, 15];
+let leftSide = [56, 48, 40 ,32, 24, 16, 8, 0];
+/// --------------------------------------------------------
 
+const changePawn = (side, square, pawn) =>{
+	WqueenSrc = "images/wq.png";
+	BqueenSrc = "images/bq.png";
+	switch(side){
+		case "front":
+			dataMoveC = pawn.getAttribute("data-moveCount");
+			dataMoveClass = pawn.className;
+			dataHasMoved = pawn.getAttribute("data-hasMoved");
+			dataColor = pawn.getAttribute("data-color");
+
+			changePiece = `<img class="${dataMoveClass}" data-color = "${dataColor}" data-moveCount = "${dataMoveC}" src = ${WqueenSrc} dataHasMoved = "${dataHasMoved}">`
+
+			square.innerHTML = changePiece;
+			break;
+
+		case "opposite":
+			dataMoveC = pawn.getAttribute("data-moveCount");
+			dataMoveClass = pawn.className;
+			dataHasMoved = pawn.getAttribute("data-hasMoved");
+			dataColor = pawn.getAttribute("data-color");
+
+			changePiece = `<img class="${dataMoveClass}"  data-color = "${dataColor}" data-moveCount = "${dataMoveC}" src = ${BqueenSrc} dataHasMoved = "${dataHasMoved}">`
+
+			square.innerHTML = changePiece;
+			break;
+	}
+}
+
+const movePawn = (side, square, pawn) => { /// ------------------------------------------------------------------- 5 moving pawn
+
+	pawn.className = "nc";
+	pawn.setAttribute("data-hasMoved", "Moved");
+
+	countMoves = parseInt(pawn.getAttribute("data-moveCount"))+1;
+	pawn.setAttribute("data-moveCount", countMoves);
+
+
+	/// -----------------------------------------------------------------total moves count
+	totalMovesFunc(side);
+	/// -----------------------------------------------------------------------------------
+
+	document.querySelectorAll('.circle').forEach((circle)=>{circle.remove();});
+	document.querySelectorAll('.circle-capture').forEach((circle)=>{circle.remove();});
+	square.appendChild(pawn);
+
+	if(square.parentElement.getAttribute("name")=="1" | square.parentElement.getAttribute("name")=="8"){
+		changePawn(side, square, pawn);
+	}
+
+	flipFunction();
+	
+
+
+}
+
+/// ----------------------------------------------------------------------------------------------------------------------------------- end
 const totalMovesFunc = (side) =>{
 	let totalMovesList = [];
 	totalPieces.forEach((piece)=>{
@@ -28,62 +87,183 @@ const totalMovesFunc = (side) =>{
 		
 }
 
-const changePawn = (side, square, pawn) =>{
-	WqueenSrc = "images/wq.png";
-	BqueenSrc = "images/bq.png";
-	switch(side){
-		case "front":
-			dataMoveC = pawn.getAttribute("data-moveCount");
-			dataMoveClass = pawn.className;
-			dataHasMoved = pawn.getAttribute("data-hasMoved");
+/// ----------------------------------------------------------------------------------------------------------------------------------- PAWN CAPTURES
 
-			changePiece = `<img class="${dataMoveClass}" data-moveCount = "${dataMoveC}" src = ${WqueenSrc} dataHasMoved = "${dataHasMoved}">`
+const pawnCapture = (side, pawn, squareToCapture) =>{
 
-			square.innerHTML = changePiece;
-			break;
-
-		case "opposite":
-			dataMoveC = pawn.getAttribute("data-moveCount");
-			dataMoveClass = pawn.className;
-			dataHasMoved = pawn.getAttribute("data-hasMoved");
-
-			changePiece = `<img class="${dataMoveClass}" data-moveCount = "${dataMoveC}" src = ${BqueenSrc} dataHasMoved = "${dataHasMoved}">`
-
-			square.innerHTML = changePiece;
-			break;
-	}
-}
-/// ----------------------------------------------------------------------------------------------------------------------------------- PAWN MOVES
-const movePawn = (side, square, pawn) => { /// ------------------------------------------------------------------- 5 moving pawn
-	if(canPlay()==side){
-			
-		pawn.className = "nc";
-		pawn.setAttribute("data-hasMoved", "Moved");
-
-		countMoves = parseInt(pawn.getAttribute("data-moveCount"))+1;
-		pawn.setAttribute("data-moveCount", countMoves);
-
-		/// -----------------------------------------------------------------total moves count
-		totalMovesFunc(side);
-		/// -----------------------------------------------------------------------------------
-
-		document.querySelectorAll('.circle').forEach((circle)=>{circle.remove();});
-		square.appendChild(pawn);
-
-		if(square.parentElement.getAttribute("name")=="1" | square.parentElement.getAttribute("name")=="8"){
-			changePawn(side, square, pawn);
-		}
-
-		flipFunction();
+	squareToCapture.querySelector("img").remove();
+	if (side == "w") {
+		side="front"
 	}else{
-			
-		document.querySelectorAll('.circle').forEach((circle)=>{circle.remove();});
-			pawn.className = "nc";
+		side = "opposite"
+	}
+	movePawn(side, squareToCapture, pawn);
+
+}
+
+const checkForPiecesCapturesPawn = (side, piece, leftCaptureSqr, rightCaptureSqr) =>{
+	
+	
+	let leftCaptureIMG = leftCaptureSqr.querySelector("img");
+	let rightCaptureIMG = rightCaptureSqr.querySelector("img");
+	if (side == "w") {
+			side="front"
+	}else{
+			side = "opposite"
+	}
+	if(canPlay() == side){
+		if (side == "front") {
+				side="w"
+		}else{
+				side = "b"
 		}
+		switch(side){
+			case "w":
+				if (rightSide.includes(parseInt(piece.previousElementSibling.innerText))) {
+					if(leftCaptureIMG){
+						if(leftCaptureIMG.getAttribute("data-color") != side){
+							let circle = document.createElement("img");
+							circle.setAttribute("class", "circle-capture");
+							circle.setAttribute("src", "images/circle.png")
+							leftCaptureSqr.appendChild(circle);
+
+							circle.addEventListener('click',()=>{pawnCapture(side, piece, leftCaptureSqr)});
+						}
+					}
+				}else if (leftSide.includes(parseInt(piece.previousElementSibling.innerText))) {
+					if(rightCaptureIMG){
+							if(rightCaptureIMG.getAttribute("data-color") != side){
+				
+			
+								let circle = document.createElement("img");
+								circle.setAttribute("class", "circle-capture");
+								circle.setAttribute("src", "images/circle.png")
+								rightCaptureSqr.appendChild(circle);
+
+								circle.addEventListener('click',()=>{pawnCapture(side, piece, rightCaptureSqr)});
+
+							}
+						}
+				}else{
+
+					if(leftCaptureIMG){
+						if(leftCaptureIMG.getAttribute("data-color") != side){
+							
+							
+							let circle = document.createElement("img");
+							circle.setAttribute("class", "circle-capture");
+							circle.setAttribute("src", "images/circle.png")
+							leftCaptureSqr.appendChild(circle);
+
+							circle.addEventListener('click',()=>{pawnCapture(side, piece, leftCaptureSqr)});
+						}
+					}
+					
+					if(rightCaptureIMG){
+						if(rightCaptureIMG.getAttribute("data-color") != side){
+							
+						
+							let circle = document.createElement("img");
+							circle.setAttribute("class", "circle-capture");
+							circle.setAttribute("src", "images/circle.png")
+							rightCaptureSqr.appendChild(circle);
+
+							circle.addEventListener('click',()=>{pawnCapture(side, piece, rightCaptureSqr)});
+
+						}
+					}
+				}
+
+				break;
+
+			case "b":
+				if (rightSide.includes(parseInt(piece.previousElementSibling.innerText))) {
+						if(rightCaptureIMG){
+							if(rightCaptureIMG.getAttribute("data-color") != side){
+				
+			
+								let circle = document.createElement("img");
+								circle.setAttribute("class", "circle-capture");
+								circle.setAttribute("src", "images/circle.png")
+								rightCaptureSqr.appendChild(circle);
+
+								circle.addEventListener('click',()=>{pawnCapture(side, piece, rightCaptureSqr)});
+
+							}
+						}
+					}else if (leftSide.includes(parseInt(piece.previousElementSibling.innerText))) {
+						if(leftCaptureIMG){
+							if(leftCaptureIMG.getAttribute("data-color") != side){
+								let circle = document.createElement("img");
+								circle.setAttribute("class", "circle-capture");
+								circle.setAttribute("src", "images/circle.png")
+								leftCaptureSqr.appendChild(circle);
+
+								circle.addEventListener('click',()=>{pawnCapture(side, piece, leftCaptureSqr)});
+							}
+						}
+					}else{
+						if(leftCaptureIMG){
+							if(leftCaptureIMG.getAttribute("data-color") != side){
+								
+								
+								let circle = document.createElement("img");
+								circle.setAttribute("class", "circle-capture");
+								circle.setAttribute("src", "images/circle.png")
+								leftCaptureSqr.appendChild(circle);
+
+								circle.addEventListener('click',()=>{pawnCapture(side, piece, leftCaptureSqr)});
+							}
+						}
+					
+					if(rightCaptureIMG){
+						if(rightCaptureIMG.getAttribute("data-color") != side){
+							
+						
+							let circle = document.createElement("img");
+							circle.setAttribute("class", "circle-capture");
+							circle.setAttribute("src", "images/circle.png")
+							rightCaptureSqr.appendChild(circle);
+
+							circle.addEventListener('click',()=>{pawnCapture(side, piece, rightCaptureSqr)});
+
+							}
+						}
+					}
+
+				break;
+		}
+	}
+	
+
 	
 
 
 }
+
+
+const checkPawnCaptures = (side, piece) =>{
+	
+
+	let id = parseInt(piece.previousElementSibling.innerText);
+	let frontLeftCapture = squares[id-9];
+	let frontRightCapture = squares[id-7];
+
+	let oppositeLeftCapture = squares[id+9];
+	let oppositeRightCapture = squares[id+7];
+	switch(side){
+		case "front":
+			checkForPiecesCapturesPawn("w", piece, frontLeftCapture, frontRightCapture);
+			break;
+
+		case "opposite":
+			checkForPiecesCapturesPawn("b", piece, oppositeLeftCapture, oppositeRightCapture);
+			break;
+	}
+}
+
+
+/// ----------------------------------------------------------------------------------------------------------------------------------- PAWN MOVES
 
 
 const checkForPiecesBlockingPawn = (side, piece, square, square2) =>{ /// ------------------------------------------ 4 checking if there is a piece in front of pawn
@@ -126,33 +306,48 @@ const checkLegalMovesPawn = (side, piece, pawnMoveSqr, pawnMoveSqr2) =>{/// ----
 	
 				switch(checkForPiecesBlockingPawn("1stmove", piece, pawnMoveSqr, pawnMoveSqr2)){
 
-				case 0:
-					break;
-				case 1:
-					pawnMoveSqr.innerHTML += "<img class='circle' src='images/circle.png'>";
-					piece.className = "c";
-					document.querySelector('.circle').addEventListener('click',()=>{movePawn(side, pawnMoveSqr, piece);});
-					break;
-				case 2:
-					pawnMoveSqr.innerHTML += "<img class='circle' src='images/circle.png'>";
-					pawnMoveSqr2.innerHTML += "<img class='circle' src='images/circle.png'>";
-					piece.className = "c";
-					document.querySelectorAll('.circle')[x].addEventListener('click',()=>{movePawn(side, pawnMoveSqr, piece);});
-					document.querySelectorAll('.circle')[y].addEventListener('click',()=>{movePawn(side, pawnMoveSqr2, piece);});
-					break;
+					case 0:
+						checkPawnCaptures(side, piece);
+						break;
+					case 1:
+						
+						piece.className = "c";
+						if (canPlay()==side) {
+							checkPawnCaptures(side, piece);
+							pawnMoveSqr.innerHTML += "<img class='circle' src='images/circle.png'>";
+							document.querySelector('.circle').addEventListener('click',()=>{movePawn(side, pawnMoveSqr, piece);});
+						}
+						
+						break;
+					case 2:
+						
+						piece.className = "c";
+						if (canPlay()==side) {
+							checkPawnCaptures(side, piece);
+							pawnMoveSqr.innerHTML += "<img class='circle' src='images/circle.png'>";
+							pawnMoveSqr2.innerHTML += "<img class='circle' src='images/circle.png'>";
+							document.querySelectorAll('.circle')[x].addEventListener('click',()=>{movePawn(side, pawnMoveSqr, piece);});
+							document.querySelectorAll('.circle')[y].addEventListener('click',()=>{movePawn(side, pawnMoveSqr2, piece);});
+						}
+						break;
 				}
 
-			}else{
+		}else{
 
 				switch(checkForPiecesBlockingPawn("2ndmove", piece, pawnMoveSqr, pawnMoveSqr2)){
 
-				case 0:
-					break;
-				case 1:
-					pawnMoveSqr.innerHTML += "<img class='circle' src='images/circle.png'>";
-					piece.className = "c";
-					document.querySelector('.circle').addEventListener('click',()=>{movePawn(side, pawnMoveSqr, piece);});
-					break;
+					case 0:
+						checkPawnCaptures(side, piece);
+						break;
+					case 1:
+					
+						piece.className = "c";
+						if (canPlay()==side) {
+							checkPawnCaptures(side, piece);
+							pawnMoveSqr.innerHTML += "<img class='circle' src='images/circle.png'>";
+							document.querySelector('.circle').addEventListener('click',()=>{movePawn(side, pawnMoveSqr, piece);});
+						}
+						break;
 		}
 	}
 }
@@ -164,6 +359,10 @@ const pawnMove = (side, piece) =>{/// ------------------------------------------
 	let frontPawnMoveSquare2 = squares[id-16];
 	let oppositePawnMoveSquare = squares[id+8];
 	let oppositePawnMoveSquare2 = squares[id+16];
+
+	totalPieces.forEach((p)=>{
+		p.className = "nc";
+	});
 	if(!moves){
 		switch(side){
 			case "front":
@@ -210,11 +409,10 @@ const showLegalMoves = (pieceName, color, p) =>{ /// ---------------------------
 }
 
 
-/// ----------------------------------------------------------------------------------------------------------------------------------- PAWN CAPTURES
-
 
 
 /// ------------------------------------------------------------------ EVENT LISTENERS
 whitePawns.forEach( p => p.addEventListener('click',(p) => {showLegalMoves("pawn","w", p);}));
 blackPawns.forEach( p => p.addEventListener('click',(p) => {showLegalMoves("pawn","b", p);}));
+
 

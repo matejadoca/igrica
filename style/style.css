@@ -96,7 +96,6 @@ body{
 .square img{
 	width: 100px;
 	height: 100px;
-	z-index: 0;
 	cursor: pointer;
 }
 
@@ -116,6 +115,7 @@ body{
 }
 
 .circle-capture{
+	position: absolute;
 	width: 50px !important;
 	height: 50px !important;
 	opacity: 0.7;
@@ -130,5 +130,13 @@ body{
 }
 
 
+.nc{
+	position: absolute;
+	z-index: 0;
+}
 
+.c{
+	position: absolute;
+	z-index: 0;
+}
 
