@@ -103,9 +103,19 @@ const pawnCapture = (side, pawn, squareToCapture) =>{
 
 const checkForPiecesCapturesPawn = (side, piece, leftCaptureSqr, rightCaptureSqr) =>{
 	
+	if (leftCaptureSqr) {
+		leftCaptureIMG = leftCaptureSqr.querySelector("img");
+	}else{
+		leftCaptureIMG = false;
+	}
+
+	if (rightCaptureSqr) {
+		rightCaptureIMG = rightCaptureSqr.querySelector("img");
+	}else{
+		rightCaptureIMG = false;
+	}
+
 	
-	let leftCaptureIMG = leftCaptureSqr.querySelector("img");
-	let rightCaptureIMG = rightCaptureSqr.querySelector("img");
 	if (side == "w") {
 			side="front"
 	}else{
@@ -246,11 +256,34 @@ const checkPawnCaptures = (side, piece) =>{
 	
 
 	let id = parseInt(piece.previousElementSibling.innerText);
-	let frontLeftCapture = squares[id-9];
-	let frontRightCapture = squares[id-7];
 
-	let oppositeLeftCapture = squares[id+9];
-	let oppositeRightCapture = squares[id+7];
+	if (squares[id-9]) {
+		 frontLeftCapture = squares[id-9];	
+
+	}else{
+		frontLeftCapture = false;
+	}
+
+	if (squares[id-7]) {
+		frontRightCapture = squares[id-7]
+	}else{
+		frontRightCapture = false;
+	}
+
+	if (squares[id+9]) {
+		oppositeLeftCapture = squares[id+9];
+	}else{
+		oppositeLeftCapture = false;
+	}
+
+	if(squares[id+7]){
+		oppositeRightCapture = squares[id+7];
+	}else{
+		oppositeRightCapture = false;
+	}
+
+	
+	
 	switch(side){
 		case "front":
 			checkForPiecesCapturesPawn("w", piece, frontLeftCapture, frontRightCapture);
